@@ -4,23 +4,28 @@ outbal = initBal
 mir = annrate/12.0
 monthlypaymentLB = outbal/12.0
 monthlypaymentUB = outbal*(1+(annrate/12.0))**12.0/12.0
-months = 0
 
-while round(monthlypaymentLB-monthlypaymentUB,2) != 0.00:
-    months = 0
+while True:
+    outbal = initBal
     mmp = (monthlypaymentLB + monthlypaymentUB)/2
-    while outbal>0 and months < 12:
+    print('monthly payment:', mmp)
+    for months in range(1,13):
         outbal = outbal*(1+mir)-mmp
-        months += 1
-    if outbal < 0:
-        monthlypaymentLB = mmp
+        print('balance: ', outbal)
+        if outbal <= 0:
+            break
     if outbal > 0:
+        monthlypaymentLB = mmp
+    if outbal < 0:
         monthlypaymentUB = mmp
-
-    if round(monthlypaymentLB-monthlypaymentUB,2) == 0.00:
+    if (monthlypaymentUB-monthlypaymentLB) < 0.01:
+        break
+outbal = initBal
+for months in range(1,13):
+    outbal = outbal*(1+mir)-mmp
+    if outbal <= 0:
         break
 
-    outbal = initBal
-print(mmp)
+print(round(mmp,2))
 print(months)
-print(outbal)
+print(round(outbal,2))
