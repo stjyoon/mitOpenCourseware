@@ -80,6 +80,7 @@ def get_word_score(word, n):
 
     for i in range(0,len(word)):
         score += SCRABBLE_LETTER_VALUES[word[i]]
+    score *= len(word)
     if len(word) == HAND_SIZE:
         score += 50
 
@@ -102,7 +103,7 @@ def display_hand(hand):
     """
     for letter in hand.keys():
         for j in range(hand[letter]):
-             print (letter,)              # print all on the same line
+             print (letter, end =" ")              # print all on the same line
     print()                               # print an empty line
 
 #
@@ -132,7 +133,7 @@ def deal_hand(n):
         hand[x] = hand.get(x, 0) + 1
         
     return hand
-
+prevhand = deal_hand(HAND_SIZE)
 #
 # Problem #2: Update a hand by removing letters
 #
@@ -155,9 +156,9 @@ def update_hand(hand, word):
     # TO DO ...
     updated_hand = {}
     updated_hand = hand.copy()
-    print(updated_hand)
-    for i in range(0, len(word)):
-        updated_hand[i] = updated_hand.get(i, 0) - 1
+    wordfreq = get_frequency_dict(word)
+    for i in range(0,len(word)):
+        updated_hand[word[i]] = updated_hand[word[i]] - wordfreq[word[i]]
 
     return updated_hand
 #
@@ -228,22 +229,22 @@ def play_hand(hand, word_list):
     lofhand = calculate_handlen(hand)
     finalscore = 0
     while lofhand > 0:
-        print('you may end the hand by entering a ".", or continue playing more words by pressing enter:')
-        keep = input()
-        if keep == '.':
-            break
 
         display_hand(hand)
-        print('enter word: ')
+        print('enter word or "." to give up: ')
         word = input()
+        if word == '.':
+            play_game(word_list)
         while is_valid_word(word,hand,word_list) == False:
-            print('invalid word, try again:')
+            print('invalid word, try again or enter "." to give up:')
             word = input()
+            if word == '.':
+                play_game(word_list)
         finalscore += get_word_score(word, lofhand)
+        print('current score is: ', finalscore)
         hand = update_hand(hand,word)
         display_hand(hand)
         lofhand = calculate_handlen(hand)
-
 
 #
 # Problem #5: Playing a game
@@ -269,15 +270,18 @@ def play_game(word_list):
     print('enter option:')
     choice = input()
     options = ['n','r','e']
+    newhand = (deal_hand(HAND_SIZE))
     while choice not in options:
         print('invalid option, try again')
         choice = input()
     if choice == 'n':
-        play_hand(deal_hand(HAND_SIZE),word_list)
+        play_hand(newhand,word_list)
     if choice == 'r':
-        play_hand(hand,word_list)
+        print(newhand)
+        lasthand = newhand
+        play_hand(lasthand,word_list)
     if choice == 'e':
-        exit
+        exit()
 
 #
 # Build data structures used for entire session and play game
