@@ -133,7 +133,6 @@ def deal_hand(n):
         hand[x] = hand.get(x, 0) + 1
         
     return hand
-prevhand = deal_hand(HAND_SIZE)
 #
 # Problem #2: Update a hand by removing letters
 #
@@ -249,7 +248,10 @@ def play_hand(hand, word_list):
 #
 # Problem #5: Playing a game
 # Make sure you understand how this code works!
-# 
+#
+
+newhand = deal_hand(HAND_SIZE)
+counter = 0
 def play_game(word_list):
     """
     Allow the user to play an arbitrary number of hands.
@@ -266,20 +268,28 @@ def play_game(word_list):
     * If the user inputs anything else, ask them again.
     """
     # TO DO...
+    global newhand
     print('enter "n" for new hand, "r" to replay last hand, or "e", to exit')
     print('enter option:')
     choice = input()
     options = ['n','r','e']
-    newhand = (deal_hand(HAND_SIZE))
+    global counter
+    print(counter)
     while choice not in options:
         print('invalid option, try again')
         choice = input()
+    while choice == 'r' and counter == 0:
+        print('no previous hand available, enter "n" for new hand or "e" to exit')
+        choice = input()
     if choice == 'n':
+        if counter == 0:
+            counter += 1
+            play_hand(newhand,word_list)
+        else:
+            newhand = deal_hand(HAND_SIZE)
+            play_hand(newhand,word_list)
+    if choice == 'r' and counter > 0:
         play_hand(newhand,word_list)
-    if choice == 'r':
-        print(newhand)
-        lasthand = newhand
-        play_hand(lasthand,word_list)
     if choice == 'e':
         exit()
 
