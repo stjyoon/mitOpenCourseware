@@ -274,7 +274,6 @@ def play_game(word_list):
     choice = input()
     options = ['n','r','e']
     global counter
-    print(counter)
     while choice not in options:
         print('invalid option, try again')
         choice = input()
