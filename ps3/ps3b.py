@@ -17,6 +17,12 @@ def comp_choose_word(hand, word_list):
     word_list: list (string)
     """
     # TO DO...
+    perms = get_perms(hand, HAND_SIZE)
+    bestperm = perms[1]
+    for i in range(0,len(perms)):
+        if perms[i] in word_list:
+            get_word_score(perms[i], HAND_SIZE)
+
 
 #
 # Problem #6B: Computer plays a hand
@@ -65,11 +71,48 @@ def play_game(word_list):
     word_list: list (string)
     """
     # TO DO...
+    global newhand
+    print('enter "n" for new hand, "r" to replay last hand, or "e", to exit')
+    print('enter option:')
+    choice = input()
+    options = ['n','r','e']
+    global counter
+    while choice not in options:
+        print('invalid option, try again')
+        choice = input()
+    while choice == 'r' and counter == 0:
+        print('no previous hand available, enter "n" for new hand or "e" to exit')
+        choice = input()
+    if choice == 'n':
+        print('enter "u" to play as user or "c" to allow computer to pick word')
+        uc_choice = input()
+        while uc_choice != "u" or "c":
+            print('invalid choice, enter "u" to play as user or "c" to allow computer to choose word')
+        if counter == 0:
+            counter += 1
+            if uc_choice == "u":
+                play_hand(newhand,word_list)
+            else:
+                comp_play_hand(newhand, word_list)
+        else:
+            newhand = deal_hand(HAND_SIZE)
+            if uc_choice == "u":
+                play_hand(newhand,word_list)
+            else:
+                comp_play_hand(newhand,word_list)
+    if choice == 'r' and counter > 0:
+        play_hand(newhand,word_list)
+    if choice == 'e':
+        exit()
+
+
+
         
 #
 # Build data structures used for entire session and play game
 #
 if __name__ == '__main__':
+
     word_list = load_words()
     play_game(word_list)
 
